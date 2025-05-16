@@ -80,3 +80,14 @@ class TestUsersRouter:
         response = client.get(f"{ENDPOINT}")
         assert response.status_code == 200
         assert len(response.json()) == 2
+
+    def test_get_only_active_users(self, client):
+        UserFactory(is_deleted=True)
+        UserFactory(is_deleted=True)
+        UserFactory()
+        UserFactory()
+        UserFactory()
+
+        response = client.get(f"{ENDPOINT}")
+        assert response.status_code == 200
+        assert len(response.json()) == 3
